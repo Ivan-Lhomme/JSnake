@@ -314,20 +314,20 @@ export const game = {
 
 //------------------------- utilities -------------------------
     keylogger(event) {
-        if (this.gameRunning) {
-            if (event.key === "z") {
+        if (this.gameRunning && !this.waiting) {
+            if (event.key === "z" && this.snake[0].dataset.direction !== "down") {
                 this.snake[0].dataset.direction = "up";
             }
-
-            if (event.key === "s") {
+            
+            if (event.key === "s" && this.snake[0].dataset.direction !== "up") {
                 this.snake[0].dataset.direction = "down";
             }
-
-            if (event.key === "q") {
+            
+            if (event.key === "q" && this.snake[0].dataset.direction !== "left") {
                 this.snake[0].dataset.direction = "right";
             }
-
-            if (event.key === "d") {
+            
+            if (event.key === "d" && this.snake[0].dataset.direction !== "right") {
                 this.snake[0].dataset.direction = "left";
             }
 
