@@ -255,11 +255,12 @@ export const game = {
 
 //------------------------- snake action -------------------------
     eat() {
-        if ((this.speed - 15) > 0) {
-            this.speed = this.speed - 15;
+        if ((this.speed * 0.95) > 50) {
+            this.speed = this.speed * 0.95;
             clearInterval(this.moveLoop);
             this.move();
         }
+
         this.appleEaten++
 
         this.createSnakeSection();
