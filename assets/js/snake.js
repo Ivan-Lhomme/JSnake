@@ -9,6 +9,11 @@ export const game = {
     score: undefined,
     waiting: false,
     gameRunning: false,
+    time: {
+        display: undefined,
+        number: 0,
+        timer: undefined,
+    },
 
 //------------------------- game -------------------------
     init() {
@@ -20,6 +25,7 @@ export const game = {
 
         // creation
         this.createScore();
+        this.createTimer();
         this.createMap();
         this.createSnake();
         this.createApple();
@@ -38,12 +44,15 @@ export const game = {
 
         this.gameRunning = true;
         this.move();
+        this.startTimer();
     },
     reset() {
         clearInterval(this.moveLoop);
 
         this.score.dataset.score = 0;
         this.speed = 250;
+        this.appleEaten = 0;
+        this.time.number = 0;
 
         this.deleteSnake();
         this.deleteApple()
@@ -55,6 +64,7 @@ export const game = {
         this.placeApple();
 
         this.updateScore();
+        this.updateTimer();
     },
     resetSnakeDirection() {
         this.snake.forEach(function(snakeSection) {
@@ -63,6 +73,7 @@ export const game = {
     },
     gameOver() {
         this.gameRunning = false;
+        this.stopTimer();
 
         this.createModaleWindow(
             "Game over !",
@@ -75,11 +86,24 @@ export const game = {
     stop() {
         if (!this.waiting) {
             clearInterval(this.moveLoop);
+            this.stopTimer();
         } else {
             this.move();
+            this.startTimer();
         }
 
         this.waiting = !this.waiting;
+    },
+    startTimer() {
+        this.time.timer = setInterval(function() {
+            this.time.number += 25;
+            this.score.dataset.score = Number(this.score.dataset.score) + 0.5;
+            this.updateScore();
+            this.updateTimer();
+        }.bind(this), 250);
+    },
+    stopTimer() {
+        clearInterval(this.time.timer);
     },
 
 //------------------------- creation -------------------------
@@ -157,10 +181,16 @@ export const game = {
         this.apple = document.createElement("div");
         this.apple.classList.add("case-apple");
     },
+    createTimer() {
+        this.time.display = document.createElement("h2");
+        this.time.display.textContent = `Time : ${this.time.number}`;
+
+        document.body.appendChild(this.time.display);
+    },
 
 //------------------------- update -------------------------
     updateScore() {
-        this.score.textContent = `Score : ${this.score.dataset.score}`;
+        this.score.textContent = `Score : ${Math.round(this.score.dataset.score)}`;
     },
     updateSnake(lineAdd, colAdd) {
         let line = Number(this.snake[0].dataset.line) + lineAdd;
@@ -190,6 +220,9 @@ export const game = {
         } else {
             this.gameOver();
         }
+    },
+    updateTimer() {
+        this.time.display.textContent = `Time : ${this.time.number}`;
     },
 
 //------------------------- placement -------------------------
@@ -269,7 +302,7 @@ export const game = {
         startModal.appendChild(startText);
         if (score) {
             const startScore = document.createElement("p");
-            startScore.innerHTML = `Score : ${this.score.dataset.score}<br>Apple eaten : ${this.appleEaten}`;
+            startScore.innerHTML = `Score : ${Math.round(this.score.dataset.score)}<br>Apple : ${this.appleEaten}<br>Time : ${this.time.number / 100}s`;
 
             startModal.appendChild(startScore);
         }

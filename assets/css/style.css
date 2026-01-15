@@ -27,6 +27,15 @@ h1 {
     text-shadow: 0 0 6px rgba(0, 255, 136, 0.7);
 }
 
+h2 {
+    text-align: center;
+    margin: 16px 0;
+    font-size: clamp(12px, 1.8vw, 14px);
+    letter-spacing: 2px;
+    color: #00ff88;
+    text-shadow: 0 0 6px rgba(0, 255, 136, 0.7);
+}
+
 /* ===================== GAME MAP ===================== */
 #map {
     display: grid;
