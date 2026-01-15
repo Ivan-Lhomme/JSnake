@@ -1,0 +1,164 @@
+/* crédit : chatgpt */
+/* ===================== RESET / BASE ===================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: #1b1b1b;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Press Start 2P", monospace;
+    color: #00ff88;
+    image-rendering: pixelated;
+}
+
+/* ===================== SCORE ===================== */
+h1 {
+    text-align: center;
+    margin: 16px 0;
+    font-size: clamp(12px, 2vw, 16px);
+    letter-spacing: 2px;
+    color: #00ff88;
+    text-shadow: 0 0 6px rgba(0, 255, 136, 0.7);
+}
+
+/* ===================== GAME MAP ===================== */
+#map {
+    display: grid;
+    grid-template-rows: repeat(20, 1fr);
+    grid-template-columns: repeat(20, 1fr);
+
+    margin: auto;
+    width: min(94vw, 60vh);
+    height: min(94vw, 60vh);
+
+    border: 4px solid #00ff88;
+    background-color: #202020;
+
+    box-shadow:
+        0 0 20px rgba(0, 255, 136, 0.4),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* ===================== GRID CELLS ===================== */
+.case {
+    border: 1px solid #2a2a2a;
+    background-color: #303030;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===================== SNAKE ===================== */
+.case-snake {
+    width: 90%;
+    height: 90%;
+    background-color: #00ff88;
+
+    box-shadow:
+        inset 0 0 4px #00cc6e,
+        0 0 6px rgba(0, 255, 136, 0.8);
+}
+
+/* ===================== APPLE ===================== */
+.case-apple {
+    width: 60%;
+    height: 60%;
+    background-color: #ff3b3b;
+    border-radius: 2px;
+
+    box-shadow:
+        inset 0 0 4px #aa0000,
+        0 0 6px rgba(255, 59, 59, 0.8);
+}
+
+/* ===================== MODAL WINDOW ===================== */
+.modale-window {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.03),
+            rgba(255, 255, 255, 0.03) 1px,
+            rgba(0, 0, 0, 0.03) 1px,
+            rgba(0, 0, 0, 0.03) 2px
+        ),
+        rgba(0, 0, 0, 0.85);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* ===================== MODAL TEXT ===================== */
+.modale-window p {
+    font-size: clamp(12px, 2.5vw, 16px);
+    margin-bottom: 24px;
+    text-align: center;
+    max-width: 90%;
+    line-height: 1.6;
+
+    color: #00ff88;
+    text-shadow:
+        0 0 4px rgba(0, 255, 136, 0.8),
+        0 0 12px rgba(0, 255, 136, 0.4);
+}
+
+/* ===================== MODAL BUTTON ===================== */
+.modale-window button {
+    background: #00ff88;
+    color: #000;
+    border: none;
+    padding: 14px 28px;
+    font-size: clamp(12px, 2.5vw, 14px);
+    border-radius: 4px;
+    cursor: pointer;
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    box-shadow:
+        0 4px 0 #00aa5a,
+        0 0 10px rgba(0, 255, 136, 0.6);
+
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.modale-window button:hover {
+  transform: translateY(-2px);
+}
+
+.modale-window button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 #00cc6e;
+}
+
+/* ===================== MOBILE OPTIMIZATION ===================== */
+@media (max-width: 600px) {
+    h1 {
+        margin: 10px 0;
+    }
+
+    #map {
+        width: 92vw;
+        height: 92vw;
+    }
+
+    .modale-window p {
+        margin-bottom: 16px;
+    }
+}
