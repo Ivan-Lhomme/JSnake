@@ -3,6 +3,7 @@ export const game = {
     snake: [],
     startLength: 3,
     speed: 250,
+    appleEaten: 0,
     moveLoop: undefined,
     apple: undefined,
     score: undefined,
@@ -226,6 +227,7 @@ export const game = {
             clearInterval(this.moveLoop);
             this.move();
         }
+        this.appleEaten++
 
         this.createSnakeSection();
         this.placeApple();
@@ -267,7 +269,7 @@ export const game = {
         startModal.appendChild(startText);
         if (score) {
             const startScore = document.createElement("p");
-            startScore.textContent = `Score : ${this.score.dataset.score}`;
+            startScore.innerHTML = `Score : ${this.score.dataset.score}<br>Apple eaten : ${this.appleEaten}`;
 
             startModal.appendChild(startScore);
         }
