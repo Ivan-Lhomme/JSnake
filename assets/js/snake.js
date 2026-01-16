@@ -7,6 +7,7 @@ export const game = {
     moveLoop: undefined,
     apple: undefined,
     score: undefined,
+    bestScore: {category: "Score"},
     waiting: false,
     gameRunning: false,
     time: {
@@ -29,10 +30,14 @@ export const game = {
         this.createMap();
         this.createSnake();
         this.createApple();
+        this.createBestScore();
 
         // placement
         this.placeSnake();
         this.placeApple();
+
+        // update
+        this.updateBestScore();
 
         this.createModaleWindow(
             "Welcome to my little snake only make with javascript !",
@@ -46,6 +51,44 @@ export const game = {
         this.move();
         this.startTimer();
     },
+    gameOver() {
+        this.gameRunning = false;
+        this.stopTimer();
+
+        this.createModaleWindow(
+            "Game over !",
+            "Restart",
+            true
+        );
+
+        this.updateBestScore();
+
+        this.reset();
+    },
+    stop() {
+        if (!this.waiting) {
+            clearInterval(this.moveLoop);
+            this.stopTimer();
+        } else {
+            this.move();
+            this.startTimer();
+        }
+
+        this.waiting = !this.waiting;
+    },
+    startTimer() {
+        this.time.timer = setInterval(function() {
+            this.time.number += 25;
+            this.score.dataset.score = Number(this.score.dataset.score) + 0.5;
+            this.updateScore();
+            this.updateTimer();
+        }.bind(this), 250);
+    },
+    stopTimer() {
+        clearInterval(this.time.timer);
+    },
+
+//------------------------- reset -------------------------
     reset() {
         clearInterval(this.moveLoop);
 
@@ -71,39 +114,14 @@ export const game = {
             snakeSection.dataset.direction = "up";
         });
     },
-    gameOver() {
-        this.gameRunning = false;
-        this.stopTimer();
-
-        this.createModaleWindow(
-            "Game over !",
-            "Restart",
-            true
-        );
-
-        this.reset();
-    },
-    stop() {
-        if (!this.waiting) {
-            clearInterval(this.moveLoop);
-            this.stopTimer();
-        } else {
-            this.move();
-            this.startTimer();
-        }
-
-        this.waiting = !this.waiting;
-    },
-    startTimer() {
-        this.time.timer = setInterval(function() {
-            this.time.number += 25;
-            this.score.dataset.score = Number(this.score.dataset.score) + 0.5;
-            this.updateScore();
-            this.updateTimer();
-        }.bind(this), 250);
-    },
-    stopTimer() {
-        clearInterval(this.time.timer);
+    resetBestScore() {
+        localStorage.setItem("bestScore", JSON.stringify(
+            {
+            Score: {score: 0, apple: 0, time: 0},
+            Apple: {score: 0, apple: 0, time: 0},
+            Time: {score: 0, apple: 0, time: 0},
+            }
+        ));
     },
 
 //------------------------- creation -------------------------
@@ -187,6 +205,40 @@ export const game = {
 
         document.body.appendChild(this.time.display);
     },
+    createBestScore() {
+        this.bestScore.box = document.createElement("div");
+        this.bestScore.title = document.createElement("h2");
+        this.bestScore.stats = document.createElement("p");
+        this.bestScore.buttons = {
+            box: document.createElement("div"),
+            list: []
+        };
+        this.bestScore.reset = document.createElement("button");
+
+        ["Score", "Apple", "Time"].forEach((category) => {
+            const button = document.createElement("button");
+            button.textContent = category;
+            button.addEventListener("click", (event) => {
+                this.bestScore.category = event.target.textContent;
+                this.updateBestScoreDisplay();
+            });
+
+            this.bestScore.buttons.list.push(button);
+            this.bestScore.buttons.box.appendChild(button);
+        });
+
+        this.bestScore.reset.textContent = "reset";
+        this.bestScore.reset.id = "resetButton";
+        this.bestScore.reset.addEventListener("click", () => {
+            this.resetBestScore();
+            this.updateBestScoreDisplay();
+        });
+
+        this.bestScore.box.id = "stats";
+
+        document.body.appendChild(this.bestScore.box);
+        this.bestScore.box.append(this.bestScore.title, this.bestScore.stats, this.bestScore.buttons.box, this.bestScore.reset);
+    },
 
 //------------------------- update -------------------------
     updateScore() {
@@ -210,6 +262,7 @@ export const game = {
                 for(let x = this.snake.length-1; x > 0; x--) {
                     this.snake[x].dataset.line = this.snake[x-1].dataset.line;
                     this.snake[x].dataset.col = this.snake[x-1].dataset.col;
+                    this.snake[x].dataset.direction = this.snake[x-1].dataset.direction;
                 }
 
                 this.snake[0].dataset.line = Number(this.snake[0].dataset.line) + lineAdd;
@@ -223,6 +276,42 @@ export const game = {
     },
     updateTimer() {
         this.time.display.textContent = `Time : ${this.time.number}`;
+    },
+    updateBestScore() {
+        console.log()
+        try {
+            const bestScore = JSON.parse(localStorage.getItem("bestScore"));
+
+            if (bestScore) {
+                const score = Number(this.score.dataset.score);
+
+                if (bestScore.Score.score < score) {
+                    bestScore.Score = {score: score, apple: this.appleEaten, time: this.time.number};
+                }
+                if (bestScore.Apple.apple < this.appleEaten) {
+                    bestScore.Apple = {score: score, apple: this.appleEaten, time: this.time.number};
+                }
+                if (bestScore.Time.time < this.time.number) {
+                    bestScore.Time = {score: score, apple: this.appleEaten, time: this.time.number};
+                }
+
+                localStorage.setItem("bestScore", JSON.stringify(bestScore));
+            } else {
+                this.resetBestScore();
+            }
+        } catch (error) {
+            this.resetBestScore();
+        }
+
+        this.updateBestScoreDisplay();
+    },
+    
+    updateBestScoreDisplay() {
+        const bestScore = JSON.parse(localStorage.getItem("bestScore"))[this.bestScore.category];
+
+        this.bestScore.title.textContent = this.bestScore.category;
+
+        this.bestScore.stats.innerHTML = `Score : ${bestScore.score}<br>Apple : ${bestScore.apple}<br>time : ${bestScore.time}`;
     },
 
 //------------------------- placement -------------------------
@@ -331,10 +420,10 @@ export const game = {
             if (event.key === "d" && this.snake[0].dataset.direction !== "right") {
                 this.snake[0].dataset.direction = "left";
             }
+        }
 
-            if (event.key === " ") {
-                this.stop();
-            }
+        if (event.key === " ") {
+            this.stop();
         }
     },
 

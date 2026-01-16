@@ -171,3 +171,117 @@ h2 {
         margin-bottom: 16px;
     }
 }
+/* ===================== BEST SCORE STATS ===================== */
+#stats {
+    margin: 20px auto;
+    padding: 16px 20px;
+    width: min(90vw, 420px);
+
+    border: 2px solid #00ff88;
+    background-color: #181818;
+
+    text-align: center;
+
+    box-shadow:
+        0 0 12px rgba(0, 255, 136, 0.35),
+        inset 0 0 12px rgba(0, 0, 0, 0.8);
+}
+
+/* Title (Score / Apple / Time) */
+#stats h2 {
+    margin-bottom: 12px;
+    font-size: clamp(12px, 2vw, 14px);
+    letter-spacing: 2px;
+
+    color: #00ff88;
+    text-shadow: 0 0 6px rgba(0, 255, 136, 0.7);
+}
+
+/* Stats content */
+#stats p {
+    font-size: clamp(10px, 2vw, 12px);
+    line-height: 1.8;
+
+    color: #00ff88;
+    text-shadow:
+        0 0 4px rgba(0, 255, 136, 0.6);
+}
+
+/* ===================== BEST SCORE BUTTONS ===================== */
+
+/* Container for Score / Apple / Time buttons */
+#stats > div {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+}
+
+/* Category buttons */
+#stats > div > button {
+    background: #202020;
+    color: #00ff88;
+
+    border: 2px solid #00ff88;
+    padding: 8px 12px;
+
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(8px, 1.8vw, 10px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 6px rgba(0, 255, 136, 0.4),
+        inset 0 0 6px rgba(0, 0, 0, 0.8);
+
+    transition:
+        background-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+/* Hover effect */
+#stats > button:hover {
+    background-color: #00ff88;
+    color: #000;
+
+    box-shadow:
+        0 0 12px rgba(0, 255, 136, 0.8),
+        inset 0 0 6px rgba(255, 255, 255, 0.3);
+
+    transform: translateY(-1px);
+}
+
+/* Active (pressed) */
+#stats > button:active {
+    transform: translateY(0);
+    box-shadow:
+        0 0 6px rgba(0, 255, 136, 0.6),
+        inset 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+/* ===================== RESET BUTTON ===================== */
+
+/* Reset button stands out */
+#stats > button {
+    margin-top: 12px;
+    width: 100%;
+
+    background: #ff3b3b;
+    color: #000;
+    border-color: #ff3b3b;
+
+    box-shadow:
+        0 0 10px rgba(255, 59, 59, 0.7),
+        inset 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+/* Reset hover */
+#stats > button:hover {
+    background: #ff5f5f;
+    box-shadow:
+        0 0 16px rgba(255, 59, 59, 0.9);
+}
